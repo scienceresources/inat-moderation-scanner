@@ -1,0 +1,8 @@
+# CPU-only PyTorch build -- much smaller download than the default GPU
+# build, and this scanner never touches a GPU.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+requests>=2.31
+better-profanity>=0.7.0
+transformers>=4.40
+torch>=2.2
