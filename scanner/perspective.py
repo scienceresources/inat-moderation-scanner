@@ -7,6 +7,17 @@ quality and coverage is maintained upstream, not by this repo.
 Get a free key at https://developers.perspectiveapi.com/s/docs-get-started
 and set it as the PERSPECTIVE_API_KEY environment variable / repo secret.
 
+STATUS (as of mid-2026): Google/Jigsaw is sunsetting Perspective API.
+New usage/key requests stopped being accepted in February 2026, and the
+service itself shuts down entirely at the end of 2026
+(https://developers.perspectiveapi.com/s/docs). If you already have a
+key from before the cutoff it'll keep working until then; if not, this
+client will just stay disabled (no key -> .enabled is False -> scan.py
+falls back to the local model) and there's currently no way to get a new
+one. Don't spend time troubleshooting "why can't I sign up" -- that's
+expected. Kept in the codebase for existing keyholders and in case a
+Perspective-shaped replacement API shows up before this fully shuts off.
+
 Default free-tier quota is modest (around 1 request/second). If your scan
 scope is large, request a quota increase from the same dashboard, or narrow
 the scan with INAT_PLACE_ID / INAT_PROJECT_ID.

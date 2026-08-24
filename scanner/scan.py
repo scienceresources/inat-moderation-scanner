@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from inat_api import iter_updated_observations, fetch_observation  # noqa: E402
 import local_model  # noqa: E402
 from local_filter import local_flag  # noqa: E402
+from perspective import PerspectiveClient  # noqa: E402
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "data")
 BACKLOG_PATH = os.path.join(DATA_DIR, "backlog.json")
@@ -103,12 +104,36 @@ def months_ago(months):
     return datetime.now(timezone.utc) - timedelta(days=30 * months)
 
 
+def parse_iso(ts):
+    """Robustly parse an iNat API timestamp. datetime.fromisoformat() only
+    learned to accept a trailing 'Z' (as in '2026-08-23T04:58:02.390Z',
+    which is what the API actually returns) on Python 3.11+, so normalize
+    it ourselves -- this behaves the same on every Python version instead
+    of silently depending on which one happens to be running. Always
+    returns a tz-aware datetime (assumes UTC if the string has no offset).
+    Returns None if the string is empty or genuinely unparseable."""
+    if not ts:
+        return None
+    ts = ts.strip()
+    if ts.endswith("Z"):
+        ts = ts[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(ts)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 def determine_since(state):
     floor = months_ago(LOOKBACK_MONTHS)
     last_run = state.get("last_run_completed_at")
     if not last_run:
         return floor
-    last_run_dt = datetime.fromisoformat(last_run)
+    last_run_dt = parse_iso(last_run)
+    if last_run_dt is None:
+        return floor
     since = last_run_dt - timedelta(minutes=OVERLAP_MINUTES)
     return max(since, floor)
 
@@ -132,11 +157,34 @@ def make_backlog_item(obs, comment, reasons, max_score):
     }
 
 
+_perspective = PerspectiveClient()  # no-op / .enabled=False unless PERSPECTIVE_API_KEY is set
+
+
 def score_comment(text):
-    """Returns (reasons, max_score). Tries the local toxicity model first
-    (unless it failed to load earlier this run), falls back to the local
-    wordlist filter if the model is unavailable or fails on this
-    particular comment."""
+    """Returns (reasons, max_score). Prefers Perspective when a
+    PERSPECTIVE_API_KEY is configured (see perspective.py for why that's
+    unlikely unless you got a key before Feb 2026 -- Perspective is being
+    sunsetted and isn't accepting new sign-ups); falls back to the local
+    toxicity model, then to the local wordlist filter, in that order,
+    whenever the previous stage is unavailable or fails on this
+    particular comment.
+
+    The local model is unitary/unbiased-toxic-roberta, trained specifically
+    to avoid flagging ordinary identity/descriptor words (male, female,
+    black, white, etc.) as toxic -- see local_model.py for why that
+    matters for a nature-ID site. Still, treat every flag as "worth a
+    human look", not a verdict.
+    """
+    if _perspective.enabled:
+        scores = _perspective.score(text)
+        if scores is not None:
+            reasons = _perspective.flagged_reasons(scores)
+            max_score = max(scores.values()) if scores else 0.0
+            return reasons, max_score
+        # Perspective unavailable for this comment (unsupported language,
+        # or its circuit breaker tripped for this run) -- fall through
+        # instead of silently treating it as clean.
+
     scores = None
     if local_model.enabled():
         scores = local_model.score(text)
@@ -212,14 +260,20 @@ def run():
                         continue  # already scored in a previous run
 
                     created_at = comment.get("created_at", "")
-                    if created_at:
-                        try:
-                            created_dt = datetime.fromisoformat(created_at)
-                        except ValueError:
-                            created_dt = None
-                        if created_dt and created_dt < comment_floor:
-                            seen[cid] = created_at  # don't keep re-checking it
-                            continue  # comment itself predates the lookback window
+                    created_dt = parse_iso(created_at)
+                    if created_dt is None:
+                        # Can't confirm this comment's age -- don't default
+                        # to scanning it. Deliberately NOT marked "seen"
+                        # either, so a later run can retry it.
+                        print(
+                            f"  WARNING: comment {cid} on obs {obs.get('id')} "
+                            f"has an unparseable created_at ({created_at!r}); "
+                            f"skipping.", flush=True,
+                        )
+                        continue
+                    if created_dt < comment_floor:
+                        seen[cid] = created_at  # don't keep re-checking it
+                        continue  # comment itself predates the lookback window
 
                     scanned_comments += 1
                     seen[cid] = comment.get("created_at", "")

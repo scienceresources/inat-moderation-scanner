@@ -2,19 +2,33 @@
 Local, offline toxicity classifier -- runs entirely inside the GitHub
 Actions job, no API key, no account, no billing, no third-party service.
 
-Uses martin-ha/toxic-comment-model (https://huggingface.co/martin-ha/toxic-comment-model),
-a DistilBERT model fine-tuned on the Jigsaw Toxic Comment dataset. Unlike a
-wordlist, it scores based on the meaning/tone of the whole sentence, so it
-can catch harassment and insults that don't contain any profanity or
-slurs at all (e.g. "why would you even post this, it's horrible").
+Uses unitary/unbiased-toxic-roberta
+(https://huggingface.co/unitary/unbiased-toxic-roberta), a RoBERTa model
+fine-tuned on Jigsaw's "Unintended Bias in Toxicity Classification"
+dataset. That dataset -- and this model -- exist specifically to fix a
+failure mode of the *original* Jigsaw Toxic Comment dataset (and models
+trained on it, e.g. martin-ha/toxic-comment-model, which is what this
+scanner used to run): those models learn to associate ordinary mentions
+of identity/descriptor terms (male, female, black, white, etc.) with
+toxicity, because in their training data those words correlated with
+actual harassment. On a nature-ID site where comments constantly describe
+animal sex and coloring ("the male has a black and white striped
+abdomen"), that bias produces a wall of false positives. This model was
+trained explicitly to not do that.
 
-Honest limitation: it's still an imperfect classifier. It's strong on
-harassment/insults phrased in familiar hostile ways, and comparatively
-weak on very dry, understated passive-aggression that carries no hostile
-vocabulary -- there's no free, fully-automated tool that reliably gets
-that right. Treat every flag as "worth a human look", never as a verdict.
+It's a MULTI-LABEL model -- toxicity, severe_toxicity, obscene, threat,
+insult, identity_attack, sexual_explicit are independent probabilities,
+not a single softmax pair -- so the pipeline is built with
+function_to_apply="sigmoid" below. Using the default (softmax) would
+silently produce nonsense scores.
 
-First run downloads the model (~270MB) from Hugging Face and caches it
+Honest limitation: still an imperfect classifier, and like most toxicity
+classifiers it remains more sensitive to profanity used as-is than to
+context/tone (self-deprecating "damn, I'm dumb" can still score higher
+than it should). Treat every flag as "worth a human look", never as a
+verdict.
+
+First run downloads the model (~500MB) from Hugging Face and caches it
 locally; the GitHub Actions workflow caches that download directory
 between runs so it's not re-fetched every 6 hours.
 """
@@ -32,8 +46,14 @@ def _env_or_default(name, default, cast=str):
     return cast(val)
 
 
-MODEL_NAME = _env_or_default("TOXICITY_MODEL", "martin-ha/toxic-comment-model")
+MODEL_NAME = _env_or_default("TOXICITY_MODEL", "unitary/unbiased-toxic-roberta")
 TOXIC_THRESHOLD = _env_or_default("TOXIC_THRESHOLD", 0.65, float)
+
+# Labels this model scores independently (sigmoid, not softmax) that are
+# worth flagging on their own -- e.g. a comment could score low on
+# "toxicity" overall but high specifically on "identity_attack". Each
+# gets the same TOXIC_THRESHOLD unless overridden via env vars below.
+FLAGGED_LABELS = ["toxicity", "severe_toxicity", "obscene", "threat", "insult", "identity_attack"]
 
 _pipeline = None
 _load_failed = False
@@ -58,7 +78,8 @@ def _get_pipeline():
         tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
         model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
         _pipeline = TextClassificationPipeline(
-            model=model, tokenizer=tokenizer, top_k=None, truncation=True
+            model=model, tokenizer=tokenizer, top_k=None, truncation=True,
+            function_to_apply="sigmoid",  # multi-label: independent probabilities, not softmax
         )
     except Exception as e:  # noqa: BLE001 -- any load failure -> fall back
         print(f"WARNING: could not load local toxicity model ({e}). "
@@ -100,11 +121,17 @@ def score(text):
 
 
 def flagged_reasons(scores):
-    """Given a scores dict, return a list like ['toxic=0.87'] if the
-    toxic score is over threshold, or [] otherwise."""
+    """Given a scores dict, return a list like ['toxicity=0.87',
+    'insult=0.71'] for every FLAGGED_LABELS entry over threshold, or []
+    if none crossed. (Plural -- unlike the old single toxic/non_toxic
+    model, this one scores several labels independently, so a comment
+    can be flagged for identity_attack without a high overall toxicity
+    score, or vice versa.)"""
     if not scores:
         return []
-    toxic_score = scores.get("toxic")
-    if toxic_score is not None and toxic_score >= TOXIC_THRESHOLD:
-        return [f"toxic={toxic_score:.2f}"]
-    return []
+    reasons = []
+    for label in FLAGGED_LABELS:
+        val = scores.get(label)
+        if val is not None and val >= TOXIC_THRESHOLD:
+            reasons.append(f"{label}={val:.2f}")
+    return reasons
