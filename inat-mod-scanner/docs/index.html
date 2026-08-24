@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iNat Comment Watch — Moderation Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F5F3ED;
+    --paper-raised: #FCFBF7;
+    --ink: #23301F;
+    --ink-soft: #5B6455;
+    --line: #D9D4C4;
+    --flag: #B8792A;
+    --flag-bg: #F1E4CD;
+    --severe: #954B3D;
+    --severe-bg: #F1DCD5;
+    --resolved: #5C7057;
+    --resolved-bg: #E4E9DD;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .header{
+    background:var(--ink);
+    color:var(--paper);
+    padding:2.25rem clamp(1.25rem, 4vw, 3rem) 2rem;
+  }
+  .header .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    opacity:0.65;
+    margin:0 0 0.6rem;
+  }
+  .header h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(1.7rem, 3.2vw, 2.5rem);
+    margin:0 0 0.5rem;
+    letter-spacing:-0.01em;
+  }
+  .header p{
+    margin:0;
+    max-width:56ch;
+    color:#D7D9CE;
+    font-size:0.95rem;
+    line-height:1.55;
+  }
+  .stats{
+    display:flex;
+    gap:clamp(1.25rem, 4vw, 3rem);
+    flex-wrap:wrap;
+    margin-top:1.75rem;
+    padding-top:1.5rem;
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+  .stat .n{
+    font-family:'Fraunces', serif;
+    font-size:1.9rem;
+    font-weight:500;
+    line-height:1;
+  }
+  .stat .l{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#B7BBA9;
+    margin-top:0.35rem;
+  }
+
+  main{ max-width:900px; margin:0 auto; padding:0 clamp(1.25rem, 4vw, 3rem) 4rem; }
+
+  .toolbar{
+    position:sticky; top:0; z-index:5;
+    background:var(--paper);
+    display:flex; align-items:center; gap:0.75rem;
+    padding:1.25rem 0 1rem;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .tabs{ display:flex; gap:0.4rem; }
+  .tab{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.03em;
+    padding:0.5rem 0.9rem;
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    color:var(--ink-soft);
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .tab.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .search{
+    margin-left:auto;
+    font-family:'Inter', sans-serif;
+    font-size:0.85rem;
+    padding:0.5rem 0.8rem;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--paper-raised);
+    color:var(--ink);
+    min-width:200px;
+  }
+  .search:focus{ outline:2px solid var(--flag); outline-offset:1px; }
+
+  .log{ list-style:none; margin:0; padding:0; }
+
+  .entry{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:1.1rem 1.25rem;
+    margin:0.85rem 0;
+    position:relative;
+  }
+  .entry-top{
+    display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap;
+    margin-bottom:0.5rem;
+  }
+  .index{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    color:var(--ink-soft);
+  }
+  .species{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.05rem;
+    font-style:italic;
+  }
+  .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.65rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:0.2rem 0.5rem;
+    border-radius:999px;
+  }
+  .tag.flag{ background:var(--flag-bg); color:var(--flag); }
+  .tag.severe{ background:var(--severe-bg); color:var(--severe); }
+  .tag.resolved{ background:var(--resolved-bg); color:var(--resolved); }
+
+  .who{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin-bottom:0.5rem;
+  }
+  .who b{ color:var(--ink); font-weight:600; }
+
+  .snippet{
+    font-size:0.92rem;
+    line-height:1.55;
+    border-left:2px solid var(--line);
+    padding-left:0.75rem;
+    margin:0.6rem 0 0.75rem;
+    color:var(--ink);
+  }
+
+  .meta-row{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:0.6rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ink-soft);
+  }
+  .reasons{ display:flex; gap:0.35rem; flex-wrap:wrap; }
+  .reasons span{
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:0.15rem 0.45rem;
+    border-radius:3px;
+  }
+  .view-link{
+    font-family:'Inter', sans-serif;
+    font-size:0.82rem;
+    font-weight:600;
+    color:var(--ink);
+    text-decoration:none;
+    border-bottom:1.5px solid var(--flag);
+    white-space:nowrap;
+  }
+  .resolved-note{
+    font-size:0.78rem;
+    color:var(--resolved);
+    margin-top:0.4rem;
+  }
+
+  .empty{
+    text-align:center;
+    padding:4rem 1rem;
+    color:var(--ink-soft);
+  }
+  .empty .glyph{
+    font-family:'Fraunces', serif;
+    font-size:2.5rem;
+    font-style:italic;
+    margin-bottom:0.75rem;
+    color:var(--flag);
+  }
+
+  .paused-banner{
+    display:none;
+    background:var(--severe-bg);
+    border:1px solid var(--severe);
+    color:var(--severe);
+    border-radius:4px;
+    padding:0.85rem 1.1rem;
+    font-size:0.86rem;
+    margin:1.25rem 0 0;
+  }
+  .paused-banner b{ font-weight:600; }
+  .paused-banner .sub{
+    display:block;
+    margin-top:0.25rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    opacity:0.85;
+  }
+
+  footer{
+    max-width:900px; margin:0 auto; padding:1rem clamp(1.25rem, 4vw, 3rem) 3rem;
+    font-size:0.78rem; color:var(--ink-soft);
+  }
+  footer a{ color:var(--ink-soft); }
+
+  @media (max-width: 520px){
+    .stats{ gap:1.25rem; }
+    .toolbar{ position:static; }
+    .search{ min-width:0; width:100%; margin-left:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <p class="eyebrow">iNat Comment Watch</p>
+  <h1>Moderation Log</h1>
+  <p>Automated scan of iNaturalist comment activity for likely profanity, insults, slurs, and toxicity, flagged here for a curator or moderator to review. Nothing here is auto-removed — every entry needs a human look at the actual observation.</p>
+  <div class="stats">
+    <div class="stat"><div class="n" id="stat-pending">–</div><div class="l">pending review</div></div>
+    <div class="stat"><div class="n" id="stat-resolved">–</div><div class="l">resolved</div></div>
+    <div class="stat"><div class="n" id="stat-updated">–</div><div class="l">last scanned</div></div>
+  </div>
+  <div class="paused-banner" id="paused-banner">
+    <b>Scanning is currently paused.</b>
+    <span class="sub" id="paused-detail"></span>
+  </div>
+</div>
+
+<main>
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab active" data-tab="pending">Pending</button>
+      <button class="tab" data-tab="resolved">Resolved</button>
+    </div>
+    <input class="search" id="search" type="text" placeholder="Filter by species or username…">
+  </div>
+
+  <ul class="log" id="log"></ul>
+  <div class="empty" id="empty" style="display:none;">
+    <div class="glyph">§</div>
+    <div id="empty-text">Nothing here yet.</div>
+  </div>
+</main>
+
+<footer>
+  Data refreshes on a schedule via GitHub Actions and is committed to
+  <code>docs/data/backlog.json</code>. To dismiss a false positive without
+  removing the comment on iNat, add its comment ID to
+  <code>docs/data/manual_resolved.json</code>.
+</footer>
+
+<script>
+(async function(){
+  const state = { items: [], tab: 'pending', query: '' };
+
+  function severityTag(item){
+    if (item.status === 'resolved') return `<span class="tag resolved">Resolved</span>`;
+    return item.max_score >= 0.85
+      ? `<span class="tag severe">Severe · ${item.max_score.toFixed(2)}</span>`
+      : `<span class="tag flag">Flagged · ${item.max_score.toFixed(2)}</span>`;
+  }
+
+  function timeAgo(iso){
+    if (!iso) return '';
+    const d = new Date(iso);
+    const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+    if (days <= 0) return 'today';
+    if (days === 1) return '1 day ago';
+    if (days < 30) return `${days} days ago`;
+    const months = Math.floor(days / 30);
+    return months === 1 ? '1 month ago' : `${months} months ago`;
+  }
+
+  function escapeHtml(s){
+    return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function render(){
+    const log = document.getElementById('log');
+    const empty = document.getElementById('empty');
+    const q = state.query.trim().toLowerCase();
+
+    let filtered = state.items.filter(it => it.status === state.tab);
+    if (q){
+      filtered = filtered.filter(it =>
+        (it.species_guess || '').toLowerCase().includes(q) ||
+        (it.commenter || '').toLowerCase().includes(q) ||
+        (it.observation_owner || '').toLowerCase().includes(q)
+      );
+    }
+    filtered.sort((a, b) => {
+      if (state.tab === 'pending') return b.max_score - a.max_score;
+      return new Date(b.resolved_at || 0) - new Date(a.resolved_at || 0);
+    });
+
+    log.innerHTML = '';
+    if (filtered.length === 0){
+      empty.style.display = 'block';
+      document.getElementById('empty-text').textContent =
+        state.tab === 'pending' ? "Nothing pending — the log is clear." : "Nothing resolved yet.";
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtered.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.className = 'entry';
+      const reasons = (item.reasons || []).map(r => `<span>${escapeHtml(r)}</span>`).join('');
+      const resolvedNote = item.status === 'resolved'
+        ? `<div class="resolved-note">${escapeHtml(item.resolved_reason || '')} · ${timeAgo(item.resolved_at)}</div>`
+        : '';
+      li.innerHTML = `
+        <div class="entry-top">
+          <span class="index">#${String(i + 1).padStart(3, '0')}</span>
+          <span class="species">${escapeHtml(item.species_guess)}</span>
+          ${severityTag(item)}
+        </div>
+        <div class="who">comment by <b>${escapeHtml(item.commenter || 'unknown')}</b> on an observation by <b>${escapeHtml(item.observation_owner || 'unknown')}</b></div>
+        <div class="snippet">${escapeHtml(item.body_snippet)}</div>
+        <div class="meta-row">
+          <div class="reasons">${reasons}</div>
+          <a class="view-link" href="${item.observation_uri}" target="_blank" rel="noopener">View observation →</a>
+        </div>
+        ${resolvedNote}
+      `;
+      log.appendChild(li);
+    });
+  }
+
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.tab = btn.dataset.tab;
+      render();
+    });
+  });
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    state.query = e.target.value;
+    render();
+  });
+
+  try {
+    const res = await fetch('data/backlog.json', { cache: 'no-store' });
+    const data = await res.json();
+    state.items = data.items || [];
+
+    const pendingCount = state.items.filter(i => i.status === 'pending').length;
+    const resolvedCount = state.items.filter(i => i.status === 'resolved').length;
+    document.getElementById('stat-pending').textContent = pendingCount;
+    document.getElementById('stat-resolved').textContent = resolvedCount;
+    document.getElementById('stat-updated').textContent = data.generated_at ? timeAgo(data.generated_at) : '—';
+
+    try {
+      const controlRes = await fetch('data/control.json', { cache: 'no-store' });
+      const control = await controlRes.json();
+      if (control && control.enabled === false) {
+        document.getElementById('paused-banner').style.display = 'block';
+        const parts = [];
+        if (control.paused_by) parts.push(`paused by ${control.paused_by}`);
+        if (control.paused_at) parts.push(timeAgo(control.paused_at));
+        if (control.note) parts.push(control.note);
+        document.getElementById('paused-detail').textContent = parts.join(' — ');
+      }
+    } catch (controlErr) { /* no control file yet -- assume running */ }
+
+    render();
+  } catch (err) {
+    document.getElementById('empty').style.display = 'block';
+    document.getElementById('empty-text').textContent =
+      'Could not load data/backlog.json yet — it appears after the first scan runs.';
+  }
+})();
+</script>
+
+</body>
+</html>
