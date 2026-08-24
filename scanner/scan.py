@@ -184,6 +184,7 @@ def run():
 
     since = determine_since(state)
     since_iso = since.isoformat()
+    comment_floor = months_ago(LOOKBACK_MONTHS)  # strict per-comment age cutoff
     print(f"Scanning observations updated since {since_iso} "
           f"(place_id={PLACE_ID}, project_id={PROJECT_ID})")
 
@@ -209,6 +210,16 @@ def run():
                         continue
                     if cid in seen:
                         continue  # already scored in a previous run
+
+                    created_at = comment.get("created_at", "")
+                    if created_at:
+                        try:
+                            created_dt = datetime.fromisoformat(created_at)
+                        except ValueError:
+                            created_dt = None
+                        if created_dt and created_dt < comment_floor:
+                            seen[cid] = created_at  # don't keep re-checking it
+                            continue  # comment itself predates the lookback window
 
                     scanned_comments += 1
                     seen[cid] = comment.get("created_at", "")
