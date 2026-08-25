@@ -86,7 +86,7 @@ def env_or_default(name, default, cast=str):
     return cast(val)
 
 
-LOOKBACK_MONTHS = env_or_default("LOOKBACK_MONTHS", 4, int)
+LOOKBACK_MONTHS = env_or_default("LOOKBACK_MONTHS", 1, int)
 PLACE_ID = os.environ.get("INAT_PLACE_ID") or None
 PROJECT_ID = os.environ.get("INAT_PROJECT_ID") or None
 REQUEST_DELAY = env_or_default("INAT_REQUEST_DELAY", 1.0, float)
