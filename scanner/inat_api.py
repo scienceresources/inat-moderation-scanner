@@ -18,7 +18,11 @@ import time
 import requests
 
 BASE_URL = "https://api.inaturalist.org/v1/observations"
-OBS_FIELDS = "id,uri,species_guess,observed_on,updated_at,user,comments"
+# `identifications` added alongside `comments` so the full-thread LLM
+# review (llm_review.py) has the complete ID history to reason over, not
+# just comments -- a bad-faith or spammy ID pattern can show up with no
+# comments at all.
+OBS_FIELDS = "id,uri,species_guess,observed_on,updated_at,user,comments,identifications"
 
 
 def iter_updated_observations(since_iso, place_id=None, project_id=None,

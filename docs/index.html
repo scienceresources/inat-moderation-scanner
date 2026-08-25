@@ -347,7 +347,11 @@
           <span class="species">${escapeHtml(item.species_guess)}</span>
           ${severityTag(item)}
         </div>
-        <div class="who">comment by <b>${escapeHtml(item.commenter || 'unknown')}</b> on an observation by <b>${escapeHtml(item.observation_owner || 'unknown')}</b></div>
+        <div class="who">${item.kind === 'llm_thread'
+          ? `guideline flag on <b>${escapeHtml(item.commenter || 'unknown')}</b>'s activity, on an observation by <b>${escapeHtml(item.observation_owner || 'unknown')}</b>`
+          : item.kind === 'identification'
+          ? `identification note by <b>${escapeHtml(item.commenter || 'unknown')}</b> on an observation by <b>${escapeHtml(item.observation_owner || 'unknown')}</b>`
+          : `comment by <b>${escapeHtml(item.commenter || 'unknown')}</b> on an observation by <b>${escapeHtml(item.observation_owner || 'unknown')}</b>`}</div>
         <div class="snippet">${escapeHtml(item.body_snippet)}</div>
         <div class="meta-row">
           <div class="reasons">${reasons}</div>
