@@ -1,5 +1,340 @@
 {
-  "generated_at": null,
-  "lookback_months": 4,
-  "items": []
+  "generated_at": "2026-08-26T10:41:16.005266+00:00",
+  "lookback_months": 1,
+  "items": [
+    {
+      "kind": "identification",
+      "comment_id": "ident-874485231",
+      "observation_id": 244660,
+      "observation_uri": "http://www.inaturalist.org/observations/244660",
+      "species_guess": "Old World Rats",
+      "observation_owner": "nrg800",
+      "commenter": "fish-enthusiast",
+      "body_snippet": "[identified as Rattus norvegicus] these are both brown rats",
+      "comment_created_at": "2026-08-20T12:46:55+00:00",
+      "flagged_at": "2026-08-26T10:13:30.314088+00:00",
+      "reasons": [
+        "toxicity=0.99",
+        "insult=0.99"
+      ],
+      "max_score": 0.9942376613616943,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22780908,
+      "observation_id": 1476971,
+      "observation_uri": "http://naturewatch.org.nz/observations/1476971",
+      "species_guess": "bent grass",
+      "observation_owner": "rowan_hindmarsh_walls",
+      "commenter": "joedillon",
+      "body_snippet": "I'm struggling to key this one out! Maybe imbecilla. Did you put this specimen somewhere?",
+      "comment_created_at": "2026-08-01T16:50:04+12:00",
+      "flagged_at": "2026-08-26T10:17:09.832158+00:00",
+      "reasons": [
+        "toxicity=0.98",
+        "insult=0.97"
+      ],
+      "max_score": 0.9807174801826477,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22859767,
+      "observation_id": 1840161,
+      "observation_uri": "http://www.inaturalist.org/observations/1840161",
+      "species_guess": "rough hedgenettle",
+      "observation_owner": "faerthen",
+      "commenter": "sapienshane",
+      "body_snippet": "That darn key! XD",
+      "comment_created_at": "2026-08-07T20:44:09-07:00",
+      "flagged_at": "2026-08-26T10:18:24.318848+00:00",
+      "reasons": [
+        "toxicity=0.96",
+        "obscene=0.98"
+      ],
+      "max_score": 0.9824911952018738,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22825319,
+      "observation_id": 5547397,
+      "observation_uri": "https://www.inaturalist.org/observations/5547397",
+      "species_guess": "life",
+      "observation_owner": "thesoulflowers",
+      "commenter": "thesoulflowers",
+      "body_snippet": "parasites on margin of leaf",
+      "comment_created_at": "2026-08-04T22:28:04-06:00",
+      "flagged_at": "2026-08-26T10:27:32.977011+00:00",
+      "reasons": [
+        "toxicity=0.99",
+        "insult=0.99"
+      ],
+      "max_score": 0.9917016625404358,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22767625,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "brimmie",
+      "body_snippet": "DON’T LISTEN TO THESE FOOLS THEY ARE MINDLESS BEASTS CORRUPTED BY THE HORRIBLE EVIL OF GERALD",
+      "comment_created_at": "2026-07-31T07:41:40+10:00",
+      "flagged_at": "2026-08-26T10:28:43.157432+00:00",
+      "reasons": [
+        "toxicity=0.98",
+        "insult=0.97"
+      ],
+      "max_score": 0.979469895362854,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22769246,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "brimmie",
+      "body_snippet": "Gerald is a dead rotting corpse that is already one with the soil",
+      "comment_created_at": "2026-07-31T11:23:45+10:00",
+      "flagged_at": "2026-08-26T10:28:43.531862+00:00",
+      "reasons": [
+        "toxicity=0.96",
+        "insult=0.93"
+      ],
+      "max_score": 0.9579808115959167,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22774760,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "aaravmishra",
+      "body_snippet": "Bob is a stork. Why? So that this *ragebait* can influence you to add even more comments to Gerald. Then those ones will never catch up. *Strategic defence*. More than 10 comments added by you guys are to my credit. Then you think that that I am in a desperate state. I'm playing more smart than you, the followers followers of dave and bob, choosing an opinion instead of purity and originality, who",
+      "comment_created_at": "2026-08-01T01:17:14+10:00",
+      "flagged_at": "2026-08-26T10:28:45.413222+00:00",
+      "reasons": [
+        "toxicity=0.69"
+      ],
+      "max_score": 0.6900376081466675,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22775269,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "aaravmishra",
+      "body_snippet": "I used stork as ragebait to get more comments on Gerald as I said.\nI have seen you use a multitude of negative words (\"DON’T LISTEN TO THESE FOOLS THEY ARE MINDLESS BEASTS CORRUPTED BY THE HORRIBLE EVIL OF GERALD\" is certainly beyond community guidelines. I have written each comment trying to stay under the limits.) I think you are more stuck than me.\n\nI may not know what I have gotten into (excep",
+      "comment_created_at": "2026-08-01T02:03:44+10:00",
+      "flagged_at": "2026-08-26T10:28:47.076198+00:00",
+      "reasons": [
+        "toxicity=0.71",
+        "insult=0.67"
+      ],
+      "max_score": 0.7112335562705994,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22771955,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "aaravmishra",
+      "body_snippet": "If you are reading this pls. fave this observation and pass on the message so that Gerald can defeat this useless horseshoe crab molt whose followers now have a mission which we cannot let him accomplish: surpass Gerald.\n\nAnd your \"bob\" was posted 5 months ago. Can it even think of replacing Gerald?\n\n@brimmie So is Dave a useless exoskeleton who was long gone even before he was observed.\n\n@rangerp",
+      "comment_created_at": "2026-07-31T19:30:17+10:00",
+      "flagged_at": "2026-08-26T10:28:48.055233+00:00",
+      "reasons": [
+        "toxicity=0.68"
+      ],
+      "max_score": 0.6815118789672852,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22784782,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "texas_nature_family",
+      "body_snippet": "Plz dont ruin the chickadee obs; that one is non-silly",
+      "comment_created_at": "2026-08-02T01:01:59+10:00",
+      "flagged_at": "2026-08-26T10:28:50.171134+00:00",
+      "reasons": [
+        "toxicity=0.92",
+        "insult=0.88"
+      ],
+      "max_score": 0.9184156060218811,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22777217,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "texas_nature_family",
+      "body_snippet": "@brimmie, I'm not going to call you a \"corrupted, mindless beast,\" but who is the one being non-scientific? Bob is a Gray Heron, not a Great Blue as you suggest... Also, you called him a CRANE! What do you call that? 🤦‍♂️",
+      "comment_created_at": "2026-08-01T05:40:16+10:00",
+      "flagged_at": "2026-08-26T10:28:51.415360+00:00",
+      "reasons": [
+        "toxicity=0.65"
+      ],
+      "max_score": 0.6514639258384705,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22774248,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "brimmie",
+      "body_snippet": "Did you not hear him? Bob is a HERON",
+      "comment_created_at": "2026-08-01T00:24:27+10:00",
+      "flagged_at": "2026-08-26T10:28:51.964011+00:00",
+      "reasons": [
+        "toxicity=0.69",
+        "insult=0.65"
+      ],
+      "max_score": 0.6903365254402161,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22786227,
+      "observation_id": 5890862,
+      "observation_uri": "https://www.inaturalist.org/observations/5890862",
+      "species_guess": "Eastern Muskrat",
+      "observation_owner": "dongminsung",
+      "commenter": "buglover15",
+      "body_snippet": "I thought you said Dave didn’t have a brain, so how is he rotting it ???",
+      "comment_created_at": "2026-08-02T03:44:09+10:00",
+      "flagged_at": "2026-08-26T10:28:52.279468+00:00",
+      "reasons": [
+        "toxicity=0.93",
+        "insult=0.88"
+      ],
+      "max_score": 0.9271162152290344,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22786232,
+      "observation_id": 6679901,
+      "observation_uri": "https://www.inaturalist.org/observations/6679901",
+      "species_guess": "Eastern Black-capped Chickadee",
+      "observation_owner": "tom15",
+      "commenter": "ponera_bread",
+      "body_snippet": "CHUCK",
+      "comment_created_at": "2026-08-01T13:44:47-04:00",
+      "flagged_at": "2026-08-26T10:30:49.672349+00:00",
+      "reasons": [
+        "toxicity=0.79",
+        "insult=0.69"
+      ],
+      "max_score": 0.7939590811729431,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "identification",
+      "comment_id": "ident-874819374",
+      "observation_id": 8717497,
+      "observation_uri": "https://www.inaturalist.org/observations/8717497",
+      "species_guess": "Engelmann's Pricklypear",
+      "observation_owner": "ari10",
+      "commenter": "ikeikemori",
+      "body_snippet": "[identified as Opuntia] Opuntia are like Diplacus sp. and Quercus sp. a pain in the butt to identify",
+      "comment_created_at": "2026-08-21T00:37:19+00:00",
+      "flagged_at": "2026-08-26T10:36:44.586242+00:00",
+      "reasons": [
+        "toxicity=0.80"
+      ],
+      "max_score": 0.7958472371101379,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22843116,
+      "observation_id": 8801773,
+      "observation_uri": "https://www.inaturalist.org/observations/8801773",
+      "species_guess": "Polished Flea Beetle",
+      "observation_owner": "ckallen",
+      "commenter": "entomike",
+      "body_snippet": "black legs, irridescent elytra",
+      "comment_created_at": "2026-08-06T12:54:25-05:00",
+      "flagged_at": "2026-08-26T10:36:52.548969+00:00",
+      "reasons": [
+        "toxicity=0.68"
+      ],
+      "max_score": 0.934562623500824,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    },
+    {
+      "kind": "comment",
+      "comment_id": 22874586,
+      "observation_id": 9463385,
+      "observation_uri": "https://www.inaturalist.org/observations/9463385",
+      "species_guess": "Blue Oat Mite",
+      "observation_owner": "blazeclaw",
+      "commenter": "blazeclaw",
+      "body_snippet": "Dorsal anus",
+      "comment_created_at": "2026-08-09T12:29:42+00:00",
+      "flagged_at": "2026-08-26T10:38:27.541993+00:00",
+      "reasons": [
+        "toxicity=0.90"
+      ],
+      "max_score": 0.9461496472358704,
+      "status": "pending",
+      "resolved_at": null,
+      "resolved_reason": null
+    }
+  ]
 }
