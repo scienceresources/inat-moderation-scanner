@@ -1,7 +1,7 @@
 {
-  "enabled": true,
-  "paused_at": null,
-  "paused_by": null,
-  "note": null,
-  "consecutive_run_failures": 2
+  "enabled": false,
+  "paused_at": "2026-09-02T10:29:37.703693+00:00",
+  "paused_by": "auto",
+  "note": "Auto-paused after 3 consecutive runs failed to reach the iNaturalist API -- it may be down or rate-limiting this scanner.",
+  "consecutive_run_failures": 3
 }
